@@ -29,7 +29,7 @@ public class ConnectionClient {
         Socket socket = null;
         
         try{
-            serversocket = new ServerSocket(9000); //podría poner socket.getPort();
+            serversocket = new ServerSocket(9010); //podría poner socket.getPort();
             socket = serversocket.accept();
             is = socket.getInputStream();
             System.out.println("The connection established from the address" + socket.getInetAddress()); 
