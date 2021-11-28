@@ -57,7 +57,7 @@ public class WelcomeWindowServerAppController implements Initializable {
     
     public void start(Stage primaryStage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getResource("WelcomeWindowApp.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("WelcomeWindowServerApp.fxml"));
         
         Scene scene = new Scene(root);
         
