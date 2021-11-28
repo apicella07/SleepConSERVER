@@ -48,16 +48,18 @@ public class GetStartedController implements Initializable {
         
     }
      
-        public void changeScreenButtonWhenPushed(javafx.event.ActionEvent event) throws IOException{
-             
-           Parent welcomeWindow = FXMLLoader.load(getClass().getResource("WelcomeWindowServerApp.fxml"));
-           Scene welcomeScene = new Scene(welcomeWindow);
-           
-           Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow(); //node object you can get the scene and the windowand cast it as a scene
-           
-           window.setScene(welcomeScene);
-           window.show();
-        }
+               @FXML
+    public void continuemenu (ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("AccessInformation.fxml"));
+        
+        Scene loginScene = new Scene(root);
+        
+        Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        
+        window.setScene(loginScene);
+        window.show();
+    }
+        
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
