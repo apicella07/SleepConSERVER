@@ -5,11 +5,12 @@
  */
 package Server;
 
+import java.io.Serializable;
 import java.util.*;
 
 
 
-public class Report {
+public class Report implements Serializable {
     
     
     private Date todaysDate;

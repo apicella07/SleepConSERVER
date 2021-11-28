@@ -29,11 +29,12 @@ public class ConnectionClient {
         Socket socket = null;
         
         try{
-            serversocket = new ServerSocket(9000); //podría poner socket.getPort();
+            serversocket = new ServerSocket(9010); //podría poner socket.getPort();
             socket = serversocket.accept();
             is = socket.getInputStream();
-            System.out.println("The connection established from the address" + socket.getInetAddress()); 
+            System.out.println("Connection established from the address" + socket.getInetAddress()); 
         }catch(IOException ex){
+            System.out.println("Not possible to start the server.");
             ex.printStackTrace();
         }
         
@@ -44,16 +45,19 @@ public class ConnectionClient {
                 Patient patientconnected = (Patient) newpat;
                 System.out.println(patientconnected.toString());  
             }
-        }catch(IOException ex){
+        }catch(EOFException ex){
+            System.out.println("All data have been correctly read.");
             ex.printStackTrace();
-        }
-        finally{
-            releaseResources(ois,serversocket,socket);
+        }catch(IOException | ClassNotFoundException io){
+            System.out.println("Unnable to read from the client.");
+            io.printStackTrace();
+        }finally{
+            releaseResources(ois,socket,serversocket);
         }
         
     }   
         
-        private static void releaseResources(ObjectInputStream ois, ServerSocket serversocket, Socket socket){
+        private static void releaseResources(ObjectInputStream ois, Socket socket, ServerSocket serverSocket){
             
             try{
                 ois.close();
@@ -62,13 +66,13 @@ public class ConnectionClient {
             }
             
             try{
-                serversocket.close();
+               socket.close();
             }catch(IOException ex){
                 Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             try{
-                socket.close();
+                serverSocket.close();
             }catch(IOException ex){
                 Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
             }
