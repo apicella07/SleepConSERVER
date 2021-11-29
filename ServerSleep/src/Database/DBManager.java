@@ -15,12 +15,31 @@ public class DBManager implements DBManagerInterface {
 
 	private Connection c;
 	private PatientManager patient;
-
+        private static final String driver="com.mysql.jdbc.Driver";
+        private static final String user="root";
+        private static final String pass="";
+        private static final String url="jdbc:mysql://localhost:3306/dbsleep";
 	public DBManager() {
 		super();
 	}
-
-	public void connect() {
+        
+    /**
+     *Conexión para ddl
+     */
+    @Override
+        public void connect(){
+            c=null;
+            try {
+                Class.forName(driver);
+                c=(Connection) DriverManager.getConnection(url,user,pass);
+                if(c!=null){
+                    System.out.println("Connection stablished.");
+                }
+            }catch(ClassNotFoundException | SQLException e){
+                System.out.println("Error de conexión."+e);
+            }
+        }
+	/*public void connect() {
 		try {
 			// Open database connection
 			Class.forName("org.sqlite.JDBC");
@@ -33,7 +52,7 @@ public class DBManager implements DBManagerInterface {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	public void setC(Connection c) {
 		this.c = c;

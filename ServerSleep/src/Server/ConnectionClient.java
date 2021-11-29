@@ -13,7 +13,7 @@ import java.util.logging.*;
  *
  * @author marin
  */
-public class ConnectionClient {
+public class ConnectionClient implements Runnable {
     //private int portNumber;
     //private ServerSocket serversocket;
     private ArrayList<Patient>  patients;
@@ -78,6 +78,11 @@ public class ConnectionClient {
             }
             
         }
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
         
     }
 
