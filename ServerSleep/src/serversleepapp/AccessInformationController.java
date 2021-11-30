@@ -5,6 +5,7 @@
  */
 package serversleepapp;
 
+import Server.Patient;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import javafx.scene.control.*;
 import java.util.Date;
 import static javafx.application.Application.launch;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.stage.Stage;
 
 /**
@@ -35,11 +37,17 @@ public class AccessInformationController implements Initializable {
      * Initializes the controller class.
      */
     
+    
+    
+    @FXML 
+    private Button search;
     @FXML 
     private Button goback;
     @FXML 
     private Button continuemenu;
-    
+    @FXML
+    private TextField dniTF;
+        
             public void start(Stage primaryStage) throws Exception {
 
            Parent root = FXMLLoader.load(getClass().getResource("AccessInformation.fxml"));
@@ -80,7 +88,43 @@ public class AccessInformationController implements Initializable {
             window.setScene(loginScene);
             window.show();
         }
+        
+        
+                    @FXML
+        public void searchByDNI (ActionEvent event) throws IOException {
+            
+             //for bucle que recorra todos los pacientes, algo así (i= patient1, i < length.pacients , i++)
+             //{ aquí dentro el codigo de esta funcion }
+        
+            Patient patient= new Patient();
+            if (dniTF.getText().equals(patient.getDni())){
+                
+            
+            
+            Parent root = FXMLLoader.load(getClass().getResource("PatientsInformation.fxml"));
+            Scene loginScene = new Scene(root);
 
+            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+            window.setScene(loginScene);
+            window.show();
+            
+            }
+            
+            else{
+                
+            Parent root = FXMLLoader.load(getClass().getResource("PatientsInformationError.fxml"));
+            Scene loginScene = new Scene(root);
+
+            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+            window.setScene(loginScene);
+            window.show();
+            }
+             
+
+            
+        }
             
     @Override
     public void initialize(URL url, ResourceBundle rb) {

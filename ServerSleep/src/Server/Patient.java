@@ -14,10 +14,14 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import javafx.beans.property.SimpleStringProperty;
 
 
 
 public class Patient implements Serializable{
+    
+    
+    //Para trabajar con table view hay que hacer un casting a SimpleStringProperty
     
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     
@@ -31,6 +35,7 @@ public class Patient implements Serializable{
     private String gender; 
     private ArrayList<Integer> recordedEEG;
     
+   
     
     public Patient() {
 		super();
@@ -267,7 +272,8 @@ public class Patient implements Serializable{
         }
         return true;
     }
-
+    
+        
 public static  void main(String[] args){
         Report report = todaysReport();
         //report = ;
