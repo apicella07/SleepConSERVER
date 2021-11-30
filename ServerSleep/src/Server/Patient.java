@@ -57,6 +57,14 @@ public class Patient implements Serializable{
             this.gender = gender;
             this.address = addres;
     }
+    public Patient(String name, String lastname, String telephone, String addres, String dni, String gender) {
+            super();
+            this.name = name;
+            this.lastname = lastname;
+            this.telephone = telephone;
+            this.gender = gender;
+            this.address = addres;
+    }
     public Patient(String name, String lastname, String telephone, String address, Date dateOfBirth, String dni, String gender,ArrayList<Integer> recordedECG ){
         
         this.name = name;
