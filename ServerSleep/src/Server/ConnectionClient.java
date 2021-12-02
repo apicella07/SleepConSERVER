@@ -111,7 +111,40 @@ public class ConnectionClient  {
         }
         return rep;
     }
-
+    
+    public static EEG receiveEEG() throws ParseException, ClassNotFoundException {
+        InputStream is = null;
+        ObjectInputStream ois = null;
+        ServerSocket serversocket = null;
+        Socket socket = null;
+        BufferedReader buf = null;
+        InputStreamReader ins = null;
+        EEG eeg = null;
+        SimpleDateFormat formato=null;
+        try {
+            serversocket = new ServerSocket(9010);
+            socket = serversocket.accept();
+            is = socket.getInputStream();
+            System.out.println("Connection established from the address" + socket.getInetAddress());
+            ois=new ObjectInputStream(is);
+            Object mensaje;
+            formato= new SimpleDateFormat("dd-MM-yyyy");
+            Date todaysDate=formato.parse(buf.readLine());
+            String dni=buf.readLine();
+            mensaje=ois.readObject();
+            eeg=new EEG(todaysDate,dni,mensaje);
+            System.out.println(eeg.toString());
+            
+            
+        } catch (IOException ex) {
+            System.out.println("Not possible to start the server.");
+            ex.printStackTrace();
+        } finally {
+            releaseResources(buf, socket, serversocket);
+        }
+        return eeg;
+    }
+    
  
 
     
