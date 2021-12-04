@@ -16,6 +16,9 @@ import java.util.logging.*;
  * @author marin
  */
 public class ConnectionClient  {
+    
+    
+    
     public static Patient receivePatient() {
         InputStream is = null;
         ObjectInputStream ois = null;

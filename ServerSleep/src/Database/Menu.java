@@ -5,104 +5,143 @@
  */
 package Database;
 
-import Server.Patient;
+import Server.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Scanner;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.sql.Connection;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  *
- * @author gabri
+ * @author marin
  */
-
 public class Menu {
-    private static DBManagerInterface dbm;
+    private Connection c;
     private static Database.DBManagerInterface dbman;
-    private static PatientManagerInterface pmi; 
+    private static PatientManagerInterface pmi;
     private static UserManagerInterface umi;
     private static BufferedReader br;
-    
-    
-    public static void main(String[] args) throws IOException, ParseException {
-       
-        dbman=new DBManager();
+    private  PatientManager pm;
+    private static Patient patientUsing = new Patient();
+    private static int num,numUsing;
+    private static boolean inUse;
+    private static boolean logged;
+    private static String ipString;
+    private static InetAddress ip;
+
+    public static void main(String[] args) throws IOException, ParseException, Exception {
+        dbman = new DBManager();
         dbman.connect();
         dbman.createTables();
-        
-        br = new BufferedReader (new InputStreamReader(System.in));
-        
+        //dbman.deleteTables();
+        pmi = dbman.getPatientManager();
+        umi=dbman.getUserManager();
+        umi.connect();
+      
+        br = new BufferedReader(new InputStreamReader(System.in));
         Scanner sc = new Scanner(System.in);
         
-        System.out.println("Hello, type the option you want: 1. Add patient, 2: Todavia no");
-        int number = sc.nextInt();
+        inUse=false;
+        logged=false;
+        int max;
+        System.out.println("WELCOME TO SLEEP CONTROL MANAGER\n");
         
-        switch(number){
+        while(true){
+            searchbyDNI(); //Now variable patientUsing is the patient with this DNI
+            System.out.println("What do you want to do?\n"+"1.View patient's EEG history.\n"+"2.View patient's report history.\n"+"3.View patient's personal information"+"4.Receive an EEG of your patient.");
+            System.out.println("0. Exit.\n");
+            max=4;
+            num=requestNumber(max);
+            numUsing=num;
+            inUse=true;
             
-            case 1: 
-                addPatient();
-                break;
+            while(inUse){
+                switch(numUsing){
+                    case 1:
+                        //viewEEGHIstory
+                        break;
+                    case 2:
+                        reportHistory();
+                        break;
+                    case 3:
+                        System.out.println(patientUsing.toString());
+                        break;
+                    case 4:
+                        //receivePatient();
+                        //receiveEEG();
+                        break;
+                    default:
+                        inUse=false;
+                        logged=false;  
+                        break;
+                }
+                break; //NO ESTOY SEGURA DE SI ESTE TENGO QUE PONERLO HASTA QUE NO LO PRUEBE
+            }
+      
+            pressEnter();
         }
-        
+
     }
-        public static String takeGender(BufferedReader reader, String text) {
-		String gender = " ";
-		String answer;
-		try {
-			do {
-				System.out.println(text + "(m/f)");
-				answer = reader.readLine();
-				switch (answer) {
-				case "M":
-				case "m":
-					gender = "Male";
-					break;
-				case "F":
-				case "f":
-					gender = "Female";
-					break;
-				default:
-					System.out.println("The data introduced is NOT correct.");
-					System.out.println("Please introduce m in case of Male or f in case of Female");
-					System.out.println("Try again.");
-					gender = " ";
-					break;
-				}
-			} while (gender.equals(" "));
-		} catch (IOException ex) {
-			System.out.println("Error reading");
-		}
-		return gender;
+    
+
+    
+    public static void searchbyDNI() throws IOException{
+        System.out.println("Type the dni of the patient you want to search" );
+        String dniobtained = br.readLine();
+        patientUsing = pmi.searchSpecificPatientByDNI(dniobtained);
+        System.out.println("The patient is:" +patientUsing.toString());
+       
+    }
+    
+       public static void getReport() throws IOException{
+         LocalDate data= ui.takeDate(br,"Type the day of the report you want to get like this yyyy-MM-dd");
+        java.util.Date repsday = java.sql.Date.valueOf(data);
+        
+        Report newrepobtained = pmi.getDailyReport(repsday);
+        System.out.println("The report is: " +newrepobtained);
+    }
+       
+       public static void reportHistory(){
+            ArrayList<Report> reps = new ArrayList<Report>();
+
+          Report newrepo;
+          reps = pmi.reportHistory();
+          Iterator it = reps.iterator();
+
+          while(it.hasNext()){
+              newrepo = (Report) it.next();
+              System.out.println(newrepo.toString());
+              System.out.println("");
+          }
+       }
+       
+      
+       public static int requestNumber(int max) {
+		// int max is the maximum option that is acceptable
+		int num;
+		do {
+
+			num = ui.takeInteger(br, "Introduce the number: ");
+
+		} while (ui.CheckOption(num, max));
+
+		return num;
 	}
-        public static void  addPatient() throws IOException, ParseException {
-            System.out.println("Type the name of the patient you'll add");
-            String name = br.readLine();
-            System.out.println("Type the lastname of the patient:");
-             String lastname = br.readLine();
-             System.out.println("Type the telephone of the patient");
-             String telephone = br.readLine();
-             System.out.println("Type the address of the patient");
-             String address = br.readLine();
-             //System.out.println("Type the Date of Birth of the patient in format (dd-mm-yyyy):");
-             //String dat = br.readLine();
-             //java.util.Date date = new SimpleDateFormat("dd-MM-yyyy").parse(dat);
-             //java.sql.Date dob = (java.sql.Date) date;
-             System.out.println("Type the DNI of the patient");
-             String dni = br.readLine();
-             String gender = takeGender(br,"Type the gender of the patient: ");
-            
-             
-             Patient newpat = new Patient(name, lastname, telephone,address,dni, gender);
-             pmi.addpatientbyRegister(newpat);
-        }
-        
-    }
-    
-
-
-
-
-    
-
+        public static void pressEnter() {
+		System.out.println("Press enter to go to the main menu and continue.");
+		try {
+			String nothing;
+			nothing = br.readLine();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+      
+       
+}
