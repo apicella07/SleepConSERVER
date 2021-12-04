@@ -5,7 +5,11 @@
  */
 package serversleepapp;
 
+import Database.PatientManager;
+import Database.PatientManagerInterface;
+import Database.UserManagerInterface;
 import Server.Patient;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,9 +25,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
@@ -40,39 +43,18 @@ public class PatientsInformationController implements Initializable {
         //declaramos botones
             @FXML 
         private Button back;
-         
-            @FXML
-        private TableView <Patient> TablePatient;
-
-            @FXML
-        private TableColumn<Patient, Integer> IdCL;
-
-            @FXML
-        private TableColumn<Patient, String> NameCL;
-
-            @FXML
-        private TableColumn<Patient, String> LastNameCL;
-
-            @FXML
-        private TableColumn<Patient, String> TelephoneCL;
-
-            @FXML
-        private TableColumn<Patient, String> AddressCL;
-
-            @FXML
-        private TableColumn<Patient, Date> DateOfBirthCL;
-
-            @FXML
-        private TableColumn<Patient, String> DNICL;   
-
-            @FXML
-        private TableColumn<Patient, String> GenderCL;
-          
-           @FXML
-        ObservableList <Patient> patients;
-           
             
-
+             @FXML
+        private TextField patientinfo;
+             
+               @FXML
+        private Label title;
+            
+            private static PatientManagerInterface pmi;
+            private static Database.DBManagerInterface dbman;
+            private static UserManagerInterface umi;
+            private static BufferedReader br;
+            private  PatientManager pm;
         
          public void start(Stage primaryStage) throws Exception {
 
@@ -91,28 +73,17 @@ public class PatientsInformationController implements Initializable {
          
                         @FXML
            public void AniadirPatient (ActionEvent event) throws IOException{
+               
                Patient p= new Patient();
                
-               // de alguna forma que se le pase a p el paciente obtenido en AccessInformationController p= paciente encontrado
+               //p = pmi.searchSpecificPatientByDNI(AccessInformationController.pat.getDni()); //
                
-               patients.add(p);
-      
-               
-               
+               patientinfo.setText(p.toString() + "\n");//para imprimir ese patient en texto
+               System.out.println(p.toString() + "\n"); //para imprimirlo en consola?? NO SE
+                   
            }
            
-           
-        /* Si hay muchos patients con el mismo ID (QUE NO DEBERIA SER) se muestran en la tabla con un array list,
-           En nuestro caso solo vamos a tener uno, asi que hay que imprimirlo
-           
-        */
-           ArrayList<Patient> patientArrayList = new ArrayList<>();
-           
-               public ObservableList<Patient> observableList(){
-               ObservableList<Patient> patients = FXCollections.observableArrayList();
-               patients.addAll(patientArrayList);
-               return patients;
-                }
+ 
 
             
            
@@ -136,19 +107,9 @@ public class PatientsInformationController implements Initializable {
         // TODO
         
         //PARA INICIALIZAR LAS COLUMNAS 
-        
-        // Hay que hacer un cast en Patient para que esto este bien al 100%
-       
-                   
-        IdCL.setCellValueFactory(new PropertyValueFactory<Patient, Integer>("Id"));
-        NameCL.setCellValueFactory(new PropertyValueFactory<Patient, String>("Name"));
-        LastNameCL.setCellValueFactory(new PropertyValueFactory<Patient, String>("Lastname"));
-        DateOfBirthCL.setCellValueFactory(new PropertyValueFactory<Patient, Date>("DateOfBirth"));
-        TelephoneCL.setCellValueFactory(new PropertyValueFactory<Patient, String>("Lastname"));
-        AddressCL.setCellValueFactory(new PropertyValueFactory<Patient, String>("Lastname"));
-        DNICL.setCellValueFactory(new PropertyValueFactory<Patient, String>("Lastname"));
-        GenderCL.setCellValueFactory(new PropertyValueFactory<Patient, String>("Lastname"));
-        TablePatient.setItems(observableList());
+
     }    
     
 }
+
+

@@ -5,6 +5,7 @@
  */
 package serversleepapp;
 
+import Database.PatientManager;
 import Server.Patient;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,20 +26,24 @@ import java.util.Date;
 import static javafx.application.Application.launch;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.stage.Stage;
+import Database.PatientManagerInterface;
+import Database.UserManagerInterface;
+import java.io.BufferedReader;
+import java.util.ArrayList;
 
 /**
  * FXML Controller class
  *
- * @author gabri
+ * @author 99lorena
  */
 public class AccessInformationController implements Initializable {
+
 
     /**
      * Initializes the controller class.
      */
     
-    
-    
+ 
     @FXML 
     private Button search;
     @FXML 
@@ -47,6 +52,12 @@ public class AccessInformationController implements Initializable {
     private Button continuemenu;
     @FXML
     private TextField dniTF;
+    
+    private static PatientManagerInterface pmi;
+    private static Database.DBManagerInterface dbman;
+    private static UserManagerInterface umi;
+    private static BufferedReader br;
+    private  PatientManager pm;
         
             public void start(Stage primaryStage) throws Exception {
 
@@ -95,12 +106,19 @@ public class AccessInformationController implements Initializable {
             
              //for bucle que recorra todos los pacientes, algo así (i= patient1, i < length.pacients , i++)
              //{ aquí dentro el codigo de esta funcion }
+             
+            ArrayList<Patient> patients = new ArrayList<Patient>();
+            patients = pmi.showPatients();
         
-            Patient patient= new Patient();
-            if (dniTF.getText().equals(patient.getDni())){
+            
+             Patient pat= new Patient();
+            //patient = pmi.searchSpecificPatientByDNI(dniTF.getText());
+            
+            for (Patient patient : patients){
                 
-            
-            
+            if (dniTF.getText().equals(patient.getDni())){
+             
+            pat=patient;
             Parent root = FXMLLoader.load(getClass().getResource("PatientsInformation.fxml"));
             Scene loginScene = new Scene(root);
 
@@ -122,7 +140,7 @@ public class AccessInformationController implements Initializable {
             window.show();
             }
              
-
+            }
             
         }
             
