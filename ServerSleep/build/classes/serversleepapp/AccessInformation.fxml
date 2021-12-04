@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="serversleepapp.AccessInformationController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="serversleepapp.AccessInformationController">
    <children>
       <Label layoutX="130.0" layoutY="49.0" text="ACCESS INFORMATION ">
          <font>
@@ -27,5 +26,6 @@
       </Label>
       <Button layoutX="47.0" layoutY="326.0" mnemonicParsing="false" onAction="#gobackGetStarted" text="Back" />
       <Button layoutX="466.0" layoutY="326.0" mnemonicParsing="false" onAction="#continueToMenuOptions" text="Continue" />
+      <Button fx:id="search" layoutX="368.0" layoutY="200.0" mnemonicParsing="false" text="Search" />
    </children>
 </AnchorPane>
