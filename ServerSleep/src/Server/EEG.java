@@ -4,6 +4,7 @@ package Server;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,10 +16,30 @@ public class EEG implements Serializable {
      Socket socket=null;
      ArrayList<Integer> eegValues = new ArrayList<Integer>();
      
+     private String dni;
+     private Date eegDate;
+     private Object file; //NO ES PARA QUE SE QUEDE ASÍ TIENE QUE SER UN FILE!?
+
+    public Object getFile() {
+        return file;
+    }
      
-     //he creado esto porque creo que es lo que tendrá pero no sabemos
      public EEG(ArrayList<Integer> eegVals){
          this.eegValues=eegVals;
+     }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public Date getEegDate() {
+        return eegDate;
+    }
+     public EEG(Date eegdate,String dni,Object file){
+         super();
+         this.dni=dni;
+         this.eegDate=eegdate;
+         
      }
      
      public EEG(){

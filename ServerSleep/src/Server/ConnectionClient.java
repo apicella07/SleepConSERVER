@@ -7,140 +7,173 @@ package Server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.*;
 /**
  *
  * @author marin
  */
-public class ConnectionClient implements Runnable {
-    //private int portNumber;
-    //private ServerSocket serversocket;
-    private ArrayList<Patient>  patients;
-    private ArrayList<Users> users;
+public class ConnectionClient  {
     
-    //para cuando hayan varios clientes habra que hacer este código 
-    //private ArrayList<Socket> clients;
     
-    public static void main(String[] args) throws ClassNotFoundException {
+    
+    public static Patient receivePatient() {
         InputStream is = null;
         ObjectInputStream ois = null;
         ServerSocket serversocket = null;
         Socket socket = null;
-        
-        try{
-            serversocket = new ServerSocket(9010); //podría poner socket.getPort();
+        BufferedReader buf = null;
+        InputStreamReader ins = null;
+        Patient pat = null;
+        try {
+            serversocket = new ServerSocket(9010); //podrÃ­a poner socket.getPort();
             socket = serversocket.accept();
             is = socket.getInputStream();
-            System.out.println("Connection established from the address" + socket.getInetAddress()); 
-        }catch(IOException ex){
+            System.out.println("Connection established from the address" + socket.getInetAddress());
+            ins = new InputStreamReader(socket.getInputStream());
+            buf = new BufferedReader(ins);
+            //Tengo que leer: name,lastname,telep,addres,dni y gender
+            String line;
+            String name, lastname, telephone, address, dni, gender;
+            while ((line = buf.readLine()) != null) {
+                if (line.toLowerCase().contains("finish")) {
+                    System.out.println("Stopping the server.");
+                    releaseResources(buf, socket, serversocket);
+                    System.exit(0);
+                }
+                name = line;
+                lastname = buf.readLine();
+                telephone = buf.readLine();
+                address = buf.readLine();
+                dni = buf.readLine();
+                gender = buf.readLine();
+                pat = new Patient(name, lastname, telephone, address, dni, gender);
+                System.out.println(pat.toString());
+            }
+            
+        } catch (IOException ex) {
             System.out.println("Not possible to start the server.");
             ex.printStackTrace();
+        } finally {
+            releaseResources(buf, socket, serversocket);
         }
-        
-        try{
-            ois = new ObjectInputStream(is);
-            Object newpat;
-            while((newpat= ois.readObject())!= null){
-                Patient patientconnected = (Patient) newpat;
-                System.out.println(patientconnected.toString());  
-            }
-        }catch(EOFException ex){
-            System.out.println("All data have been correctly read.");
-            ex.printStackTrace();
-        }catch(IOException | ClassNotFoundException io){
-            System.out.println("Unnable to read from the client.");
-            io.printStackTrace();
-        }finally{
-            releaseResources(ois,socket,serversocket);
-        }
-        
-    }   
-        
-        private static void releaseResources(ObjectInputStream ois, Socket socket, ServerSocket serverSocket){
-            
-            try{
-                ois.close();
-            }catch(IOException ex){
-                Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            try{
-               socket.close();
-            }catch(IOException ex){
-                Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            try{
-                serverSocket.close();
-            }catch(IOException ex){
-                Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return pat;
     }
-        
-    }
-
-/*
-    public static void main(String[] args) throws ClassNotFoundException, ParseException {
-       
+    
+    
+    public static Report receiveReport() throws ParseException {
         InputStream is = null;
         ObjectInputStream ois = null;
         ServerSocket serversocket = null;
-        Socket socketReceiver = null;
-        Socket socketSender=null;
-        PrintWriter print = null;
-        BufferedReader buf=null;
-        try{
-            
-            serversocket = new ServerSocket(9000); //podría poner socketReceiver.getPort();
-            socketReceiver = serversocket.accept();
-            is = socketReceiver.getInputStream();
-            
-            System.out.println("The connection established from the address" + socketReceiver.getInetAddress()); 
-            socketSender=new Socket(socketReceiver.getInetAddress(),9009);
-            
-        }catch(IOException ex){
-            ex.printStackTrace();
-        }
-        
-        try{
-            ois = new ObjectInputStream(is);
-            Object newpat;
-            ObjectOutputStream objectOut=null;
-            while((newpat= ois.readObject())!= null){
-                Patient patientconnected = (Patient) newpat;
-                Integer dni = patientconnected.getId();
-                print=new PrintWriter(socketSender.getOutputStream(),true);
-                System.out.println("The patient you are going to send is:\n" + patientconnected.toString()); 
-                Patient pat = getPatient(dni);
-                objectOut=new ObjectOutputStream(socketSender.getOutputStream());
-                objectOut.writeObject(pat);
-                //ESCRIBIR AL CLIENTE QUÉ FECHA DE REPORT QUIERE DE ESTE PACIENTE
-                //HAY QUE CREAR EN EL CLIENTE QUE SE CORTE EN EL MOMENTO EN EL QUE ESCRIBA UNA FECHA, NO MAS Y DEBERIA HABER TBB UNA EXCEPCION DE QUE NO SON VALIDAS ETC.
-                
-                print.println("Choose the report's date you want to see: (DD/MM/YY)\n");
-                //RECIBIR RESPUESTA Y MOSTRARLE EL REPORT
-                buf=new BufferedReader(new InputStreamReader(socketReceiver.getInputStream()));
-                String dateString=buf.readLine();
-                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                java.util.Date dateUtil=formato.parse(dateString);
-                java.sql.Date dateSql= new java.sql.Date(dateUtil.getTime());
-                Report rep = PatientManager.viewReport(dni,dateSql);
-                objectOut.writeObject(rep);
+        Socket socket = null;
+        BufferedReader buf = null;
+        InputStreamReader ins = null;
+        Report rep = null;
+        SimpleDateFormat formato=null;
+        try {
+            serversocket = new ServerSocket(9010); //podrÃ­a poner socket.getPort();
+            socket = serversocket.accept();
+            is = socket.getInputStream();
+            System.out.println("Connection established from the address" + socket.getInetAddress());
+            ins = new InputStreamReader(socket.getInputStream());
+            buf = new BufferedReader(ins);
+            String line;
+            String sleepqual,exhaus,average,movement,timeToFall,rest,stayAwake,timesAwake,dreams,worries,todaysMood,doubtsForDoctor;
+            Date todaysDate;
+            while ((line = buf.readLine()) != null) {
+                if (line.toLowerCase().contains("finish")) {
+                    System.out.println("Stopping the server.");
+                    releaseResources(buf, socket, serversocket);
+                    System.exit(0);
+                }
+                formato= new SimpleDateFormat("dd-MM-yyyy");
+                todaysDate=formato.parse(line);
+                sleepqual = buf.readLine();
+                exhaus = buf.readLine();
+                average = buf.readLine();
+                movement = buf.readLine();
+                timeToFall = buf.readLine();
+                rest=buf.readLine();
+                stayAwake=buf.readLine();
+                timesAwake=buf.readLine();
+                dreams=buf.readLine();
+                worries=buf.readLine();
+                todaysMood=buf.readLine();
+                doubtsForDoctor=buf.readLine();
+                rep=new Report(todaysDate,sleepqual,exhaus,average,movement,timeToFall,rest,stayAwake,timesAwake,dreams,worries,todaysMood,doubtsForDoctor);
+                System.out.println(rep.toString());
             }
-        }catch(IOException ex){
+            
+        } catch (IOException ex) {
+            System.out.println("Not possible to start the server.");
             ex.printStackTrace();
+        } finally {
+            releaseResources(buf, socket, serversocket);
         }
-        
-        finally{
-            releaseResources(ois,serversocket,socketReceiver);
+        return rep;
+    }
+    
+    public static EEG receiveEEG() throws ParseException, ClassNotFoundException {
+        InputStream is = null;
+        ObjectInputStream ois = null;
+        ServerSocket serversocket = null;
+        Socket socket = null;
+        BufferedReader buf = null;
+        InputStreamReader ins = null;
+        EEG eeg = null;
+        SimpleDateFormat formato=null;
+        try {
+            serversocket = new ServerSocket(9010);
+            socket = serversocket.accept();
+            is = socket.getInputStream();
+            System.out.println("Connection established from the address" + socket.getInetAddress());
+            ois=new ObjectInputStream(is);
+            Object mensaje;
+            formato= new SimpleDateFormat("dd-MM-yyyy");
+            Date todaysDate=formato.parse(buf.readLine());
+            String dni=buf.readLine();
+            mensaje=ois.readObject();
+            eeg=new EEG(todaysDate,dni,mensaje);
+            System.out.println(eeg.toString());
+            
+            
+        } catch (IOException ex) {
+            System.out.println("Not possible to start the server.");
+            ex.printStackTrace();
+        } finally {
+            releaseResources(buf, socket, serversocket);
         }
-        */
-  
+        return eeg;
+    }
+    
+ 
+
+    
+    
+    
+    private static void releaseResources(BufferedReader bu, Socket socket, ServerSocket serverSocket) {
+
+        try {
+            bu.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            serverSocket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+}
 
