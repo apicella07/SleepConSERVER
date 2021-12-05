@@ -18,7 +18,6 @@ import java.util.logging.*;
 public class ConnectionClient  {
     public static Patient receivePatient() {
         InputStream is = null;
-        ObjectInputStream ois = null;
         ServerSocket serversocket = null;
         Socket socket = null;
         BufferedReader buf = null;
@@ -112,51 +111,32 @@ public class ConnectionClient  {
         return rep;
     }
     
-    /*public static Signals receiveEEG() throws ParseException, ClassNotFoundException {
-        InputStream is = null;
-        ServerSocket serversocket = null;
-        Socket socket = null;
-        BufferedReader buf = null;
-        InputStreamReader ins = null;
-        Report rep = null;
-        SimpleDateFormat formato=null;
-        String valuesString;
-        ArrayList<Integer> values=new ArrayList<Integer>();
+    public static FileWriter receiveFile() {
+        int byteRead;
+        FileWriter file1=null;
+        ServerSocket serverSocket=null;
+        BufferedWriter buf=null;
         try {
-            serversocket = new ServerSocket(9010); 
-            socket = serversocket.accept();
-            is = socket.getInputStream();
-            System.out.println("Connection established from the address" + socket.getInetAddress());
-            ins = new InputStreamReader(socket.getInputStream());
-            buf = new BufferedReader(ins);
-            int value;
-            String line;
-            while ((line = buf.readLine()) != null) {
-                if (line.toLowerCase().contains("finish")) {
-                    System.out.println("Stopping the server.");
-                    releaseResources(buf, socket, serversocket);
-                    System.exit(0);
+                serverSocket = new ServerSocket(9010);
+                Socket socket = serverSocket.accept();
+                InputStream inputStream = socket.getInputStream();
+                file1=new FileWriter("./PatientsFile.txt");
+                buf=new BufferedWriter(file1);
+                while ((byteRead = inputStream.read()) != -1) {
+                    char caracter = (char) byteRead;
+                    System.out.print(caracter);
+                    buf.write(caracter+"\t");
                 }
-            String dni=line;
-            formato= new SimpleDateFormat("dd-MM-yyyy");
-            Date todaysDate=formato.parse(buf.readLine());
-            //valuesString=;
-            }
-            //eeg=new Signals(todaysDate,dni,values);
-            //System.out.println(eeg.toString());
-            
-            
-        } catch (IOException ex) {
-            System.out.println("Not possible to start the server.");
-            ex.printStackTrace();
+                buf.flush();
+                System.out.println("File was succesfully received.");
+            } catch (IOException ex) {
+                System.out.println("Not possible to start the server.");
+                Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            releaseResources(buf, socket, serversocket);
+            releaseResourcesServer(buf,serverSocket);
         }
-        return eeg;
-    }*/
-    
- 
-
+        return file1;
+    }
     
     
     
@@ -180,6 +160,18 @@ public class ConnectionClient  {
             Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    private static void releaseResourcesServer(BufferedWriter buf,ServerSocket serverSocket) {
+        try {
+            buf.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 
