@@ -38,7 +38,7 @@ public class Menu {
     public static void main(String[] args) throws IOException, ParseException, Exception {
         dbman = new DBManager();
         dbman.connect();
-        dbman.createTables();
+        //dbman.createTables();
         //dbman.deleteTables();
         pmi = dbman.getPatientManager();
         umi=dbman.getUserManager();
@@ -64,7 +64,7 @@ public class Menu {
             while(inUse){
                 switch(numUsing){
                     case 1:
-                        //viewEEGHIstory
+                        viewEEGHistory(patientUsing.getDni());
                         break;
                     case 2:
                         reportHistory();
@@ -117,6 +117,19 @@ public class Menu {
           while(it.hasNext()){
               newrepo = (Report) it.next();
               System.out.println(newrepo.toString());
+              System.out.println("");
+          }
+       }
+       public static void viewEEGHistory(String dni){
+            ArrayList<EEG> eegs = new ArrayList<EEG>();
+
+          EEG neweeg;
+          eegs = pmi.viewEEGHistory(dni);
+          Iterator it = eegs.iterator();
+
+          while(it.hasNext()){
+              neweeg = (EEG) it.next();
+              System.out.println(neweeg.toString());
               System.out.println("");
           }
        }

@@ -113,48 +113,7 @@ public class PatientManager implements PatientManagerInterface  {
                 return newreport;
             }
             
-            /*
-	public static Report viewReport(String dni, java.util.Date dateRep) {
-            Report rep = new Report();
-            Connection c1 = null;
-            
-            try {
-			String sql = "SELECT patient_id FROM Patients WHERE DNI = ?";
-			PreparedStatement prep = c1.prepareStatement(sql);
-			prep.setString(1, "%"+dni+"%");
-                        ResultSet rs = prep.executeQuery();
-                        int id = rs.getInt("patient_id");
-                        
-                        String sql1= "SELECT REPORT FROM Reports WHERE patient_id =? AND DATE_REPORT LIKE =?";
-                        PreparedStatement prep2 = c1.prepareStatement(sql);
-			prep.setString(1, "%"+id+"%");
-                        prep.setString(2, "%"+dateRep+"%");
-			ResultSet rs2 = prep.executeQuery();
-                        while (rs.next()) {
-                            java.util.Date repdate=rs.getDate("report_date");
-                            String quality=rs.getString("quality");
-                            String exhaust=rs.getString("exhaustion");
-                            String averageHours=rs.getString("hours");
-                            String movem=rs.getString("movement");
-                            String timeToFall=rs.getString("time");
-                            String res=rs.getString("rest");
-                            String awake=rs.getString("awake");
-                            String timAwake=rs.getString("times awake");
-                            String dreams=rs.getString("dreams");
-                            String worr=rs.getString("worries");
-                            String mood=rs.getString("mood");
-                            String doubts=rs.getString("doubts");
-                            rep=new Report(repdate,quality,exhaust,averageHours,movem,timeToFall,res,awake,timAwake,dreams,worr,mood,doubts);
-                        }
-				
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-            return rep;
-	}
-	*/
-            
+          
 	public  ArrayList<Patient> showPatients() {
 		ArrayList<Patient> patList = new ArrayList<Patient>();
                 //Connection c1 = null; //ESTO NO ES ASÍ, SÓLO QUE HAY QUE INICIALIZARLA PARA QUE NO DE ERROR
@@ -266,54 +225,7 @@ public class PatientManager implements PatientManagerInterface  {
 		return pat;
 		
 	}
-/*
-   public static ArrayList<Report> viewReportHistory(String dni) {
-            
-           ArrayList<Report> repList = new ArrayList<Report>(); 
-           Connection c1 = null;
-            try {
-			String sql = "SELECT patient_id FROM Patients WHERE DNI = ?";
-			PreparedStatement prep = c1.prepareStatement(sql);
-			prep.setString(1, "%"+dni+"%");
-                        ResultSet rs = prep.executeQuery();
-                        int id = rs.getInt("patient_id");
-                        
-                        String sql1= "SELECT REPORT FROM Reports WHERE patient_id =? ";
-                        PreparedStatement prep1 = c1.prepareStatement(sql1);
-			prep1.setString(1, "%"+id+"%");
-			ResultSet rs2 = prep.executeQuery();
-                        while (rs2.next()) {
-                            java.sql.Date datesql= (java.sql.Date) rs2.getDate("report_date");
-                            java.util.Date  dat = new java.util.Date(datesql.getTime());
-                            String quality=rs2.getString("quality");
-                            String exhaust=rs2.getString("exhaustion");
-                            String averageHours=rs2.getString("hours");
-                            String movem=rs2.getString("movement");
-                            String timeToFall=rs2.getString("time");
-                            String res=rs2.getString("rest");
-                            String awake=rs2.getString("awake");
-                            String timAwake=rs2.getString("times awake");
-                            String dreams=rs2.getString("dreams");
-                            String worr=rs2.getString("worries");
-                            String mood=rs2.getString("mood");
-                            String doubts=rs2.getString("doubts");
-                            Report rep=new Report(dat,quality,exhaust,averageHours,movem,timeToFall,res,awake,timAwake,dreams,worr,mood,doubts);
-                            repList.add(rep);
-                          
-                        }
-                        
-                      rs2.close();
-                      prep1.close();
-                      rs.close();
-                      prep.close();  
-				
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-            return repList;
-	}
-/*
+
      public void addBitalinoFrame(Patient pat) {
 		try {
      
@@ -334,10 +246,12 @@ public class PatientManager implements PatientManagerInterface  {
 			e.printStackTrace();
 			}
 	}      
-     */
+     
   
-    public static EEG viewEEG(String dni, java.util.Date date) {
+    public EEG viewEEG(String dni, java.util.Date date) {
          EEG eeg = new EEG();
+         ArrayList<Integer> values=new ArrayList<>();
+         String[] valuesString;
          Connection c1 = null; 
             try {
 			String sql = "SELECT patient_id FROM Patients WHERE DNI = ?";
@@ -353,27 +267,23 @@ public class PatientManager implements PatientManagerInterface  {
                         
 			ResultSet rs2 = prep1.executeQuery();
                         while (rs2.next()) {
-                            java.sql.Date datesql= (java.sql.Date) rs2.getDate("EEG_date");
-                            java.util.Date eeg_date = new java.util.Date(datesql.getTime());
                             String EEG=rs2.getString("EEG");
-                           // eeg =new EEG(eeg_date, EEG); //No se como ya que no hay constructor en la clase EEG
-                      }
-                        
-                      rs2.close();
-                      prep1.close();
-                      rs.close();
-                      prep.close();  
-				
-			
+                            valuesString=EEG.split("\\s+"); //LO SEPARA POR ESPACIOS SE SUPONE
+                            for (int i=0; i<valuesString.length;i++){
+                               values.add(Integer.parseInt(valuesString[i])); 
+                            }
+                            eeg =new EEG(date,dni,values); 
+                      }	
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
             return eeg;
     }
 
-    public static ArrayList<EEG> viewEEGHistory(String dni) {
+    public ArrayList<EEG> viewEEGHistory(String dni) {
          ArrayList<EEG> eegs = new ArrayList<EEG>();
          ArrayList<Integer> values=new ArrayList<>();
+         String[] valuesString;
          Connection c1 = null;
             try {
 			String sql = "SELECT patient_id FROM Patients WHERE DNI = ?";
@@ -382,29 +292,21 @@ public class PatientManager implements PatientManagerInterface  {
                         ResultSet rs = prep.executeQuery();
                         int id = rs.getInt("patient_id");
                         
-                        String sql1= "SELECT EEG FROM EEGs WHERE patient_id =?";
+                        String sql1= "SELECT * FROM EEGs WHERE patient_id =?";
                         PreparedStatement prep1 = c1.prepareStatement(sql1);
-			prep1.setString(1, "%"+id+"%");  //NO SE SI ESTO ESTA BIEN PORQUE DEBERIA SER SetDate PEOR DA ERROR
-                        
+			prep1.setString(1, "%"+id+"%");
 			ResultSet rs2 = prep1.executeQuery();
                         while (rs2.next()) {
-                            //String valuesString=rs2.getInt("Values");
-                            //Debería ser un text en el que estén separados los valores por comas o algo y luego ccrear un arrayList<Integer> con ese STring
-                            //values= la creación del array list
-                            EEG eeg= new EEG(values);
-                            
+                            String dni1=rs2.getString("patient_dni");
+                            java.util.Date date = rs2.getDate("EEG_date");
+                            String EEG=rs2.getString("EEG");
+                            valuesString=EEG.split("\\s+"); //LO SEPARA POR ESPACIOS SE SUPONE
+                            for (int i=0; i<valuesString.length;i++){
+                               values.add(Integer.parseInt(valuesString[i]));
+                            }
+                            EEG eeg= new EEG(date,dni,values);
                             eegs.add(eeg);
-                           // eeg =new EEG(eeg_date, EEG); //No se como ya que no hay constructor en la clase EEG
-                      }
-                        
-                       
-                        
-                      rs2.close();
-                      prep1.close();
-                      rs.close();
-                      prep.close();  
-				
-			
+                        }
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

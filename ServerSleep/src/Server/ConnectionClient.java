@@ -135,8 +135,8 @@ public class ConnectionClient  {
             Date todaysDate=formato.parse(buf.readLine());
             String dni=buf.readLine();
             mensaje=ois.readObject();
-            eeg=new EEG(todaysDate,dni,mensaje);
-            System.out.println(eeg.toString());
+            //eeg=new EEG(todaysDate,dni,mensaje);
+            //System.out.println(eeg.toString());
             
             
         } catch (IOException ex) {
