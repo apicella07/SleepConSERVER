@@ -11,16 +11,17 @@ import Server.User;
 
 public interface UserManagerInterface {
     
-	public void connect();
+        public void connect();
 
 	public void disconnect();
 
 	public void createUser(User user);
 
-	public User checkPassword(User user);
+	//public User checkPassword(User user);
         
-        public User getUserByDNI(String dni);
+        //public User getUserByDNI(String dni);
         
-	public void deleteUser(User user);
+	//public void deleteUser(User user);
+
 
 }

@@ -16,9 +16,6 @@ import java.util.logging.*;
  * @author marin
  */
 public class ConnectionClient  {
-    
-    
-    
     public static Patient receivePatient() {
         InputStream is = null;
         ObjectInputStream ois = null;
@@ -28,7 +25,7 @@ public class ConnectionClient  {
         InputStreamReader ins = null;
         Patient pat = null;
         try {
-            serversocket = new ServerSocket(9010); //podrÃ­a poner socket.getPort();
+            serversocket = new ServerSocket(9010);
             socket = serversocket.accept();
             is = socket.getInputStream();
             System.out.println("Connection established from the address" + socket.getInetAddress());
@@ -65,7 +62,6 @@ public class ConnectionClient  {
     
     public static Report receiveReport() throws ParseException {
         InputStream is = null;
-        ObjectInputStream ois = null;
         ServerSocket serversocket = null;
         Socket socket = null;
         BufferedReader buf = null;
@@ -73,14 +69,14 @@ public class ConnectionClient  {
         Report rep = null;
         SimpleDateFormat formato=null;
         try {
-            serversocket = new ServerSocket(9010); //podrÃ­a poner socket.getPort();
+            serversocket = new ServerSocket(9010); 
             socket = serversocket.accept();
             is = socket.getInputStream();
             System.out.println("Connection established from the address" + socket.getInetAddress());
             ins = new InputStreamReader(socket.getInputStream());
             buf = new BufferedReader(ins);
             String line;
-            String sleepqual,exhaus,average,movement,timeToFall,rest,stayAwake,timesAwake,dreams,worries,todaysMood,doubtsForDoctor;
+            String dni,sleepqual,exhaus,average,movement,timeToFall,rest,stayAwake,timesAwake,dreams,worries,todaysMood,doubtsForDoctor;
             Date todaysDate;
             while ((line = buf.readLine()) != null) {
                 if (line.toLowerCase().contains("finish")) {
@@ -88,6 +84,7 @@ public class ConnectionClient  {
                     releaseResources(buf, socket, serversocket);
                     System.exit(0);
                 }
+                dni=buf.readLine();
                 formato= new SimpleDateFormat("dd-MM-yyyy");
                 todaysDate=formato.parse(line);
                 sleepqual = buf.readLine();
@@ -115,27 +112,37 @@ public class ConnectionClient  {
         return rep;
     }
     
-    public static EEG receiveEEG() throws ParseException, ClassNotFoundException {
+    /*public static Signals receiveEEG() throws ParseException, ClassNotFoundException {
         InputStream is = null;
-        ObjectInputStream ois = null;
         ServerSocket serversocket = null;
         Socket socket = null;
         BufferedReader buf = null;
         InputStreamReader ins = null;
-        EEG eeg = null;
+        Report rep = null;
         SimpleDateFormat formato=null;
+        String valuesString;
+        ArrayList<Integer> values=new ArrayList<Integer>();
         try {
-            serversocket = new ServerSocket(9010);
+            serversocket = new ServerSocket(9010); 
             socket = serversocket.accept();
             is = socket.getInputStream();
             System.out.println("Connection established from the address" + socket.getInetAddress());
-            ois=new ObjectInputStream(is);
-            Object mensaje;
+            ins = new InputStreamReader(socket.getInputStream());
+            buf = new BufferedReader(ins);
+            int value;
+            String line;
+            while ((line = buf.readLine()) != null) {
+                if (line.toLowerCase().contains("finish")) {
+                    System.out.println("Stopping the server.");
+                    releaseResources(buf, socket, serversocket);
+                    System.exit(0);
+                }
+            String dni=line;
             formato= new SimpleDateFormat("dd-MM-yyyy");
             Date todaysDate=formato.parse(buf.readLine());
-            String dni=buf.readLine();
-            mensaje=ois.readObject();
-            //eeg=new EEG(todaysDate,dni,mensaje);
+            //valuesString=;
+            }
+            //eeg=new Signals(todaysDate,dni,values);
             //System.out.println(eeg.toString());
             
             
@@ -146,7 +153,7 @@ public class ConnectionClient  {
             releaseResources(buf, socket, serversocket);
         }
         return eeg;
-    }
+    }*/
     
  
 
@@ -174,6 +181,7 @@ public class ConnectionClient  {
         }
 
     }
+
 
 }
 

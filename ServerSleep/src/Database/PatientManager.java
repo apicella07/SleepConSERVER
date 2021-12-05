@@ -49,36 +49,38 @@ public class PatientManager implements PatientManagerInterface  {
 			}
 	}
             
-            public ArrayList<Report> reportHistory(){
-                ArrayList<Report> repList = new ArrayList<Report>();
+        public ArrayList<Report> reportHistory(String dni){
+        ArrayList<Report> repList = new ArrayList<Report>();
+        try {
+                String sql = "SELECT * FROM Reports WHERE patient_dni LIKE ?";
+                PreparedStatement prep = c.prepareStatement(sql);
+                prep.setString(1, "%"+dni+"%");
+                ResultSet rs = prep.executeQuery();
                 
-		try {
-			String sql = "SELECT * FROM Reports";
-			PreparedStatement prep = c.prepareStatement(sql);
-			ResultSet rs = prep.executeQuery();
-			while (rs.next()) {
-				 java.util.Date repdate=rs.getDate("report_date");
-                                                                String quality=rs.getString("quality");
-                                                                String exhaust=rs.getString("exhaustion");
-                                                                String averageHours=rs.getString("hours");
-                                                                String movem=rs.getString("movement");
-                                                                String timeToFall=rs.getString("time");
-                                                                String res=rs.getString("rest");
-                                                                String awake=rs.getString("awake");
-                                                                String timAwake=rs.getString("times");
-                                                                String dreams=rs.getString("dreams");
-                                                                String worr=rs.getString("worries");
-                                                                String mood=rs.getString("mood");
-                                                                String doubts=rs.getString("doubts");
-                                                                Report repnew = new Report (repdate, quality, exhaust, averageHours, movem, timeToFall, res, awake, timAwake,dreams, worr, mood, doubts);
-                                                                repList.add(repnew);
-			}
+                while (rs.next()) {
+                    String dni1=rs.getString("patient_dni");
+                    java.util.Date repdate=rs.getDate("report_date");
+                    String quality=rs.getString("quality");
+                    String exhaust=rs.getString("exhaustion");
+                    String averageHours=rs.getString("hours");
+                    String movem=rs.getString("movement");
+                    String timeToFall=rs.getString("time");
+                    String res=rs.getString("rest");
+                    String awake=rs.getString("awake");
+                    String timAwake=rs.getString("times");
+                    String dreams=rs.getString("dreams");
+                    String worr=rs.getString("worries");
+                    String mood=rs.getString("mood");
+                    String doubts=rs.getString("doubts");
+                    Report repnew = new Report (dni,repdate, quality, exhaust, averageHours, movem, timeToFall, res, awake, timAwake,dreams, worr, mood, doubts);
+                    repList.add(repnew);
+                }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return repList;
-	}
+        } catch (Exception e) {
+                e.printStackTrace();
+        }
+        return repList;
+    }
 
             
             
@@ -116,7 +118,7 @@ public class PatientManager implements PatientManagerInterface  {
           
 	public  ArrayList<Patient> showPatients() {
 		ArrayList<Patient> patList = new ArrayList<Patient>();
-                //Connection c1 = null; //ESTO NO ES ASÍ, SÓLO QUE HAY QUE INICIALIZARLA PARA QUE NO DE ERROR
+                //Connection c1 = null; //ESTO NO ES ASÃ, SÃ“LO QUE HAY QUE INICIALIZARLA PARA QUE NO DE ERROR
 		try {
 			String sql = "SELECT * FROM Patients";
 			PreparedStatement prep = c.prepareStatement(sql);
@@ -248,8 +250,8 @@ public class PatientManager implements PatientManagerInterface  {
 	}      
      
   
-    public EEG viewEEG(String dni, java.util.Date date) {
-         EEG eeg = new EEG();
+    public Signals viewEEG(String dni, java.util.Date date) {
+         Signals eeg = new Signals();
          ArrayList<Integer> values=new ArrayList<>();
          String[] valuesString;
          Connection c1 = null; 
@@ -272,16 +274,47 @@ public class PatientManager implements PatientManagerInterface  {
                             for (int i=0; i<valuesString.length;i++){
                                values.add(Integer.parseInt(valuesString[i])); 
                             }
-                            eeg =new EEG(date,dni,values); 
+                            eeg =new Signals(date,dni,values); 
                       }	
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
             return eeg;
     }
+    public Signals viewEEGLUX(String dni, java.util.Date date) {
+         Signals eeg = new Signals();
+         ArrayList<Integer> values=new ArrayList<>();
+         String[] valuesString;
+         Connection c1 = null; 
+            try {
+			String sql = "SELECT patient_id FROM Patients WHERE DNI = ?";
+			PreparedStatement prep = c1.prepareStatement(sql);
+			prep.setString(1, "%"+dni+"%");
+                        ResultSet rs = prep.executeQuery();
+                        int id = rs.getInt("patient_id");
+                        
+                        String sql1= "SELECT EEG_LUX FROM EEGs WHERE patient_id =? AND EEG_DATE= ?";
+                        PreparedStatement prep1 = c1.prepareStatement(sql1);
+			prep1.setString(1, "%"+id+"%");
+                        prep1.setString(2, "%"+date+"%");  //NO SE SI ESTO ESTA BIEN PORQUE DEBERIA SER SetDate PEOR DA ERROR
+                        
+			ResultSet rs2 = prep1.executeQuery();
+                        while (rs2.next()) { 
+                            String EEG=rs2.getString("EEG");  
+                            valuesString=EEG.split("\\s+"); //LO SEPARA POR ESPACIOS SE SUPONE
+                            for (int i=0; i<valuesString.length;i++){
+                               values.add(Integer.parseInt(valuesString[i])); 
+                            }
+                            eeg=new Signals(date,dni,values); 
+                      }	
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+        return eeg;
+    }
 
-    public ArrayList<EEG> viewEEGHistory(String dni) {
-         ArrayList<EEG> eegs = new ArrayList<EEG>();
+    public ArrayList<Signals> viewEEGHistory(String dni) {
+         ArrayList<Signals> eegs = new ArrayList<Signals>();
          ArrayList<Integer> values=new ArrayList<>();
          String[] valuesString;
          Connection c1 = null;
@@ -304,7 +337,7 @@ public class PatientManager implements PatientManagerInterface  {
                             for (int i=0; i<valuesString.length;i++){
                                values.add(Integer.parseInt(valuesString[i]));
                             }
-                            EEG eeg= new EEG(date,dni,values);
+                            Signals eeg= new Signals(date,dni,values);
                             eegs.add(eeg);
                         }
 		}catch(Exception e) {
@@ -312,10 +345,6 @@ public class PatientManager implements PatientManagerInterface  {
 		}
             return eegs;
     }
-	
-	
-	
-	
-	
+
 	
 }

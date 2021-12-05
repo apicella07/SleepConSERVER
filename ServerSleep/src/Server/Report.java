@@ -15,7 +15,7 @@ public class Report implements Serializable {
     private String patdni;
     private Date todaysDate;
     private String sleepQuality; //Have you slept well during the night? yes or no
-    private String exhaustion; //Do you feel exhausted like you didn’t sleep through the night? yes or no
+    private String exhaustion; //Do you feel exhausted like you didnâ€™t sleep through the night? yes or no
     private String averageHours; //What is the average of hours you sleep daily? 
     private String movement; //Did you stir a lot during the night?
     private String timeToFallAsleep; // How long until you fall asleep? Does it take too long or a few minutes?
@@ -197,6 +197,8 @@ public class Report implements Serializable {
         return "Report{" + "todaysDate=" + todaysDate + ", Sleep Quality=" + sleepQuality + ", Exhaustion=" + exhaustion + ", Average Hours=" + averageHours + ", Movement=" + movement + ", Time to fall Asleep=" + timeToFallAsleep + ", Rest=" + rest + ", Stay Awake=" + stayAwake + ", Times Awake=" + timesAwake + ", Dreams=" + dreams + ", Worries=" + worries + ", Todays Mood=" + todaysMood + ", Doubts for the Doctor=" + doubtsForDoctor +'}';
     }
      
+   
+
    
     
 }

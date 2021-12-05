@@ -18,6 +18,7 @@ import java.time.format.DateTimeParseException;
  */
 public class ui {
     
+    
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static String takeGender(BufferedReader reader, String text) {
 		String gender = " ";
@@ -223,7 +224,7 @@ public class ui {
 		return returnValue;
 
 	}
-    
+
     
 
 }

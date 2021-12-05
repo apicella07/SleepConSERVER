@@ -22,7 +22,7 @@ import java.util.Scanner;
  * @author marin
  */
 public class Menu {
-    private Connection c;
+   private Connection c;
     private static Database.DBManagerInterface dbman;
     private static PatientManagerInterface pmi;
     private static UserManagerInterface umi;
@@ -67,7 +67,7 @@ public class Menu {
                         viewEEGHistory(patientUsing.getDni());
                         break;
                     case 2:
-                        reportHistory();
+                        reportHistory(patientUsing.getDni());
                         break;
                     case 3:
                         System.out.println(patientUsing.toString());
@@ -107,11 +107,11 @@ public class Menu {
         System.out.println("The report is: " +newrepobtained);
     }
        
-       public static void reportHistory(){
+       public static void reportHistory(String dni){
             ArrayList<Report> reps = new ArrayList<Report>();
 
           Report newrepo;
-          reps = pmi.reportHistory();
+          reps = pmi.reportHistory(dni);
           Iterator it = reps.iterator();
 
           while(it.hasNext()){
@@ -121,14 +121,14 @@ public class Menu {
           }
        }
        public static void viewEEGHistory(String dni){
-            ArrayList<EEG> eegs = new ArrayList<EEG>();
+            ArrayList<Signals> eegs = new ArrayList<Signals>();
 
-          EEG neweeg;
+          Signals neweeg;
           eegs = pmi.viewEEGHistory(dni);
           Iterator it = eegs.iterator();
 
           while(it.hasNext()){
-              neweeg = (EEG) it.next();
+              neweeg = (Signals) it.next();
               System.out.println(neweeg.toString());
               System.out.println("");
           }
@@ -155,6 +155,6 @@ public class Menu {
 			ex.printStackTrace();
 		}
 	}
-      
+
        
 }
