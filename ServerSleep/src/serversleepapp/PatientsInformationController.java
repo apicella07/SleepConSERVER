@@ -34,7 +34,8 @@ import javafx.stage.Stage;
  * @author 99lorena
  */
 public class PatientsInformationController implements Initializable {
-
+     @FXML private TextField Answer1;
+     String answer1;
     /**
      * Initializes the controller class.
      */
@@ -43,11 +44,10 @@ public class PatientsInformationController implements Initializable {
             @FXML 
         private Button back;
             
-             @FXML
-        private TextField patientinfo;
-             
+        @FXML TextField patientinfo;    
                @FXML
         private Label title;
+        @FXML private Label label1;
             
             private static PatientManagerInterface pmi;
             private static Database.DBManagerInterface dbman;
@@ -57,10 +57,9 @@ public class PatientsInformationController implements Initializable {
          public void start(Stage primaryStage) throws Exception {
 
            Parent root = FXMLLoader.load(getClass().getResource("PatientsInformation.fxml"));
-
-           //will load a different xml when the button is pressed 
-           //what we are looking forward is when clicking the button of the getstarted scene changes into the following one
-
+           
+           Patient pat= new Patient(); 
+           label1.setText(pat.toString());
            Scene scene = new Scene(root);
   
            primaryStage.setScene(scene);

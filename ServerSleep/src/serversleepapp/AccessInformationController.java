@@ -49,7 +49,7 @@ public class AccessInformationController implements Initializable {
     private Button goback;
     @FXML
     private TextField dniTF;
-    
+    String dni;
     private static PatientManagerInterface pmi;
     private static Database.DBManagerInterface dbman;
     private static BufferedReader br;
@@ -59,9 +59,7 @@ public class AccessInformationController implements Initializable {
 
            Parent root = FXMLLoader.load(getClass().getResource("AccessInformation.fxml"));
 
-           //will load a different xml when the button is pressed 
-           //what we are looking forward is when clicking the button of the getstarted scene changes into the following one
-
+           
            Scene scene = new Scene(root);
 
            primaryStage.setTitle("ACCESS INFORMATION");
@@ -90,45 +88,31 @@ public class AccessInformationController implements Initializable {
                     @FXML
         public void searchByDNI (ActionEvent event) throws IOException {
             
-             //for bucle que recorra todos los pacientes, algo así (i= patient1, i < length.pacients , i++)
-             //{ aquí dentro el codigo de esta funcion }
+            dni=dniTF.getText();
+            Patient pat=pmi.searchSpecificPatientByDNI(dni);
+            if (pat !=null){
+                Parent root = FXMLLoader.load(getClass().getResource("PatientsInformation.fxml"));
+                Scene loginScene = new Scene(root);
+
+                Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+                window.setScene(loginScene);
+                window.show();
+            
+            } else{
+                
+                Parent root = FXMLLoader.load(getClass().getResource("PatientsInformationError.fxml"));
+                Scene loginScene = new Scene(root);
+
+                Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+                window.setScene(loginScene);
+                window.show();
+            }
              
-            ArrayList<Patient> patients = new ArrayList<Patient>();
-            patients = pmi.showPatients();
+            }
+            
         
-            
-             Patient pat= new Patient();
-            //patient = pmi.searchSpecificPatientByDNI(dniTF.getText());
-            
-            for (Patient patient : patients){
-                
-            if (dniTF.getText().equals(patient.getDni())){
-             
-            pat=patient;
-            Parent root = FXMLLoader.load(getClass().getResource("PatientsInformation.fxml"));
-            Scene loginScene = new Scene(root);
-
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-
-            window.setScene(loginScene);
-            window.show();
-            
-            }
-            
-            else{
-                
-            Parent root = FXMLLoader.load(getClass().getResource("PatientsInformationError.fxml"));
-            Scene loginScene = new Scene(root);
-
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-
-            window.setScene(loginScene);
-            window.show();
-            }
-             
-            }
-            
-        }
             
     @Override
     public void initialize(URL url, ResourceBundle rb) {
