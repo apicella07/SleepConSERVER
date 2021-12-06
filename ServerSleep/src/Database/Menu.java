@@ -25,7 +25,6 @@ public class Menu {
    private Connection c;
     private static Database.DBManagerInterface dbman;
     private static PatientManagerInterface pmi;
-    private static UserManagerInterface umi;
     private static BufferedReader br;
     private  PatientManager pm;
     private static Patient patientUsing = new Patient();
@@ -38,11 +37,7 @@ public class Menu {
     public static void main(String[] args) throws IOException, ParseException, Exception {
         dbman = new DBManager();
         dbman.connect();
-        //dbman.createTables();
-        //dbman.deleteTables();
         pmi = dbman.getPatientManager();
-        umi=dbman.getUserManager();
-        umi.connect();
       
         br = new BufferedReader(new InputStreamReader(System.in));
         Scanner sc = new Scanner(System.in);

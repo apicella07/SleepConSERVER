@@ -18,8 +18,6 @@ public class DBManager implements DBManagerInterface {
     
     private Connection c;
     private PatientManager patient;
-    private UserManager user;
-    //private UserManager user;
 
     public DBManager() {
         super();
@@ -33,7 +31,6 @@ public class DBManager implements DBManagerInterface {
             c.createStatement().execute("PRAGMA foreign_keys=ON");
 
             patient = new PatientManager(c);
-            user = new UserManager(c);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,10 +143,7 @@ public class DBManager implements DBManagerInterface {
         return patient;
     }
     
-    @Override
-    public UserManager getUserManager() {
-        return user;
-    }
+    
 
     @Override
     public int getLastId() {

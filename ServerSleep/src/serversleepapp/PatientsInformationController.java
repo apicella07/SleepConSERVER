@@ -7,7 +7,6 @@ package serversleepapp;
 
 import Database.PatientManager;
 import Database.PatientManagerInterface;
-import Database.UserManagerInterface;
 import Server.Patient;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +51,6 @@ public class PatientsInformationController implements Initializable {
             
             private static PatientManagerInterface pmi;
             private static Database.DBManagerInterface dbman;
-            private static UserManagerInterface umi;
             private static BufferedReader br;
             private  PatientManager pm;
         

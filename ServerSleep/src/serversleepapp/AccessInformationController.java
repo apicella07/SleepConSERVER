@@ -27,7 +27,6 @@ import static javafx.application.Application.launch;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.stage.Stage;
 import Database.PatientManagerInterface;
-import Database.UserManagerInterface;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
@@ -53,7 +52,6 @@ public class AccessInformationController implements Initializable {
     
     private static PatientManagerInterface pmi;
     private static Database.DBManagerInterface dbman;
-    private static UserManagerInterface umi;
     private static BufferedReader br;
     private  PatientManager pm;
         

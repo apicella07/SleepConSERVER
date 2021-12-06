@@ -205,25 +205,7 @@ public class ui {
 			return false;
 		}
 	}
-    public static byte[] takePasswordAndHashIt(BufferedReader reader, String text) {
-		System.out.println(text);
-		byte[] returnValue = null;
-		try {
-			String password = reader.readLine();
-			// Create the password's hash
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(password.getBytes());
-			returnValue = md.digest();
-
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return returnValue;
-
-	}
+    
 
     
 

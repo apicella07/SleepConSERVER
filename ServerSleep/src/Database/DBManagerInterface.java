@@ -12,7 +12,6 @@ public interface DBManagerInterface {
 	public void disconnect();
 	public void createTables();
 	public void deleteTables();
-	public UserManager getUserManager();
 	public PatientManagerInterface getPatientManager();
 	public int getLastId();
 }

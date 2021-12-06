@@ -8,7 +8,6 @@ package serversleepapp;
 import Database.DBManager;
 import Database.DBManagerInterface;
 import Database.PatientManagerInterface;
-import Database.UserManagerInterface;
 import Server.Patient;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +28,6 @@ public class Server extends Application {
     private static DBManagerInterface dbm;
     private static Database.DBManagerInterface dbman;
     private static PatientManagerInterface pmi; 
-    private static UserManagerInterface umi;
     private static BufferedReader br;
     
     @Override
