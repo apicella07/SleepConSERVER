@@ -16,13 +16,14 @@ import java.util.logging.*;
  * @author marin
  */
 public class ConnectionClient  {
-    public static Patient receivePatient() {
+    public static Patient receivePatient() throws ParseException {
         InputStream is = null;
         ServerSocket serversocket = null;
         Socket socket = null;
         BufferedReader buf = null;
         InputStreamReader ins = null;
         Patient pat = null;
+        SimpleDateFormat formato=null;
         try {
             serversocket = new ServerSocket(9010);
             socket = serversocket.accept();
@@ -33,6 +34,7 @@ public class ConnectionClient  {
             //Tengo que leer: name,lastname,telep,addres,dni y gender
             String line;
             String name, lastname, telephone, address, dni, gender;
+            java.util.Date dob;
             while ((line = buf.readLine()) != null) {
                 if (line.toLowerCase().contains("finish")) {
                     System.out.println("Stopping the server.");
@@ -43,6 +45,8 @@ public class ConnectionClient  {
                 lastname = buf.readLine();
                 telephone = buf.readLine();
                 address = buf.readLine();
+                formato= new SimpleDateFormat("yyyy-MM-dd");
+                dob=formato.parse(buf.readLine());
                 dni = buf.readLine();
                 gender = buf.readLine();
                 pat = new Patient(name, lastname, telephone, address, dni, gender);
@@ -84,8 +88,8 @@ public class ConnectionClient  {
                     System.exit(0);
                 }
                 dni=buf.readLine();
-                formato= new SimpleDateFormat("dd-MM-yyyy");
-                todaysDate=formato.parse(line);
+                formato= new SimpleDateFormat("yyyy-MM-dd");
+                todaysDate=formato.parse(buf.readLine());
                 sleepqual = buf.readLine();
                 exhaus = buf.readLine();
                 average = buf.readLine();
