@@ -84,12 +84,22 @@ public class PatientsInformationController implements Initializable {
            }
            
  
+                        @FXML
+           public void goNext (ActionEvent event) throws IOException{
+               Parent root = FXMLLoader.load(getClass().getResource("MenuOptionsServer.fxml"));
 
+               Scene loginScene = new Scene(root);
+
+               Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+               window.setScene(loginScene);
+               window.show();
+           }
             
            
                         @FXML
            public void goBackMenuOptions (ActionEvent event) throws IOException{
-               Parent root = FXMLLoader.load(getClass().getResource("MenuOptionsServer.fxml"));
+               Parent root = FXMLLoader.load(getClass().getResource("AccessInformation.fxml"));
 
                Scene loginScene = new Scene(root);
 

@@ -48,8 +48,6 @@ public class AccessInformationController implements Initializable {
     private Button search;
     @FXML 
     private Button goback;
-    @FXML 
-    private Button continuemenu;
     @FXML
     private TextField dniTF;
     
@@ -75,17 +73,7 @@ public class AccessInformationController implements Initializable {
        }
 
          
-                      @FXML
-        public void continueToMenuOptions (ActionEvent event) throws IOException{
-            Parent root = FXMLLoader.load(getClass().getResource("MenuOptionsServer.fxml"));
 
-            Scene loginScene = new Scene(root);
-
-            Stage window = (Stage) ((Node)event.getSource()).getScene().getWindow();
-
-            window.setScene(loginScene);
-            window.show();
-        }
         
              
                       @FXML
