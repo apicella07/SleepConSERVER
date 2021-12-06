@@ -5,8 +5,10 @@
  */
 package Server;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -49,7 +51,7 @@ public class ConnectionClient  {
                 dob=formato.parse(buf.readLine());
                 dni = buf.readLine();
                 gender = buf.readLine();
-                pat = new Patient(name, lastname, telephone, address, dni, gender);
+                pat = new Patient(name, lastname, telephone, address, dob,dni, gender);
                 System.out.println(pat.toString());
             }
             
@@ -176,6 +178,13 @@ public class ConnectionClient  {
         } catch (IOException ex) {
             Logger.getLogger(ConnectionClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static void main(String[] args) throws ClassNotFoundException, ParseException, UnknownHostException {
+        
+        receivePatient();
+        //receiveReport();
+        
     }
 
 
